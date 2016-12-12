@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:mulexml="http://www.mulesoft.org/schema/mule/xml" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/xml http://www.mulesoft.org/schema/mule/xml/current/mule-xml.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
+    <http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
+    <flow name="jsontojavaFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/jsonToJava" allowedMethods="GET,POST" metadata:id="0c31c8af-2468-4106-95a4-eb1623de042c" doc:name="HTTP"/>
+        <json:json-to-object-transformer returnClass="jsontojava.jsonTOJavaConvertor" metadata:id="9b22a3d9-69a9-49a3-ba4b-1622c4411a2b" doc:name="JSON to Object"/>
+        <set-variable variableName="JavaInternalObject" value="#[payload]" doc:name="JavaInternalvariable"/>
+        <logger message="#['key 1' + payload.getKey1() + ' KEY 2-  ' +payload.getKey2()]" level="INFO" doc:name="Logger"/>
+        <set-payload value="#[flowVars.JavaInternalObject]" doc:name="Set Payload"/>
+        <mulexml:object-to-xml-transformer returnClass="jsontojava.Employee" doc:name="Object to XML"/>
+    </flow>
+</mule>
